@@ -6,39 +6,19 @@ executors:
       - image: cimg/node:20.10
     
 jobs:
-  install-deps:
+  build-and-deploy:
     executor: node-executor
     steps:
       - checkout
       - run:
           name: Install dependencies
-          command: npm install
-      - persist_to_workspace:
-          root: .
-          paths:
-            - .
-
-  build:
-    executor: node-executor
-    steps:
-      - attach_workspace:
-          at: .
+          command: npm install --include=dev
       - run:
           name: Build the project
           command: npm run build  
       - run:
           name: list files in build
           command: ls -la dist
-      - persist_to_workspace:
-          root: .
-          paths:
-            - . 
-
-  deploy:
-    executor: node-executor
-    steps:
-      - attach_workspace:
-          at: . 
       - run:
           name: Install Python and pip
           command: |
@@ -60,11 +40,5 @@ workflows:
   version: 2
   build_and_deploy:
     jobs:
-      - install-deps
-      - build:
-          requires:
-            - install-deps
-      - deploy:
-          requires:
-            - build
-
+      - build-and-deploy:
+          
