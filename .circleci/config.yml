@@ -17,9 +17,6 @@ jobs:
           name: Build the project
           command: npm run build  
       - run:
-          name: list files in build
-          command: ls -la dist
-      - run:
           name: Install Python and pip
           command: |
             sudo apt-get update
